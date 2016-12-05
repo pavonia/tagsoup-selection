@@ -24,8 +24,6 @@
 * Add instances for
     - `Data.ByteString.ByteString`
     - `Data.ByteString.Lazy.ByteString`
-    - `Data.Text.Text`
-    - `Data.Text.Lazy.Text`
 
 
 ## Selection
