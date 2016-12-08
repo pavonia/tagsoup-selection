@@ -19,15 +19,6 @@
     - [Latest version](http://www.w3.org/TR/selectors4/)
 
 
-## StringLike
-
-* Add instances for
-    - `Data.ByteString.ByteString`
-    - `Data.ByteString.Lazy.ByteString`
-    - `Data.Text.Text`
-    - `Data.Text.Lazy.Text`
-
-
 ## Selection
 
 * Handle case-insensitivity (<http://www.w3.org/TR/selectors/#casesens>)

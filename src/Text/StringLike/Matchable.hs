@@ -8,6 +8,10 @@ module Text.StringLike.Matchable (
 
 import Data.List
 import Text.StringLike
+import qualified Data.Text as Text.Strict
+import qualified Data.Text.Lazy as Text.Lazy
+import qualified Data.ByteString.Char8 as BS.Strict
+import qualified Data.ByteString.Lazy.Char8 as BS.Lazy
 
 
 {- |
@@ -41,6 +45,36 @@ instance Matchable String where
     matchesInfixOf  = checkNull null isInfixOf
     matchesSuffixOf = checkNull null isSuffixOf
     matchesWordOf   = \s -> any (`matchesExactly` s) . splitOn (`elem` " \t\n\r")
+
+
+instance Matchable Text.Strict.Text where
+    matchesPrefixOf = checkNull Text.Strict.null Text.Strict.isPrefixOf
+    matchesInfixOf  = checkNull Text.Strict.null Text.Strict.isInfixOf
+    matchesSuffixOf = checkNull Text.Strict.null Text.Strict.isSuffixOf
+    matchesWordOf   = \s -> any (`matchesExactly` s) . Text.Strict.split (`elem` " \t\n\r")
+
+
+instance Matchable Text.Lazy.Text where
+    matchesPrefixOf = checkNull Text.Lazy.null Text.Lazy.isPrefixOf
+    matchesInfixOf  = checkNull Text.Lazy.null Text.Lazy.isInfixOf
+    matchesSuffixOf = checkNull Text.Lazy.null Text.Lazy.isSuffixOf
+    matchesWordOf   = \s -> any (`matchesExactly` s) . Text.Lazy.split (`elem` " \t\n\r")
+
+
+instance Matchable BS.Strict.ByteString where
+    matchesPrefixOf = checkNull BS.Strict.null BS.Strict.isPrefixOf
+    matchesInfixOf  = checkNull BS.Strict.null BS.Strict.isInfixOf
+    matchesSuffixOf = checkNull BS.Strict.null BS.Strict.isSuffixOf
+    matchesWordOf   = \s -> any (`matchesExactly` s) . BS.Strict.splitWith (`elem` " \t\n\r")
+
+
+instance Matchable BS.Lazy.ByteString where
+    matchesPrefixOf = checkNull BS.Lazy.null BS.Lazy.isPrefixOf
+    -- NB: BS.Lazy does not export @isInfixOf@.
+    -- Workaround is to convert to strict.
+    matchesInfixOf  = checkNull BS.Lazy.null (\a b -> BS.Strict.isInfixOf (BS.Lazy.toStrict a) (BS.Lazy.toStrict b))
+    matchesSuffixOf = checkNull BS.Lazy.null BS.Lazy.isSuffixOf
+    matchesWordOf   = \s -> any (`matchesExactly` s) . BS.Lazy.splitWith (`elem` " \t\n\r")
 
 
 -- | @checkNull null comp s1 s2@ returns 'False' if either @null s1 == True@ or @comp s1 s2 == False@,
